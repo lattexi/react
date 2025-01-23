@@ -1,9 +1,15 @@
-import { MediaItem } from 'hybrid-types';
+import { MediaItem } from 'hybrid-types/DBTypes';
+import { Link } from 'react-router-dom';
 
-const MediaRow = (props: { item: MediaItem; }) => {
+type MediaItemProps = {
+    item: MediaItem;
+    setSelectedItem: (item: MediaItem | undefined) => void;
+};
+
+const MediaRow = (props: MediaItemProps) => {
     const { item } = props;
     return (
-        <tr key={item.media_id}>
+        <tr>
             <td>
                 <img src={item.thumbnail || undefined} alt={item.title} />
             </td>
@@ -12,7 +18,13 @@ const MediaRow = (props: { item: MediaItem; }) => {
             <td>{new Date(item.created_at).toLocaleString('fi-FI')}</td>
             <td>{item.filesize}</td>
             <td>{item.media_type}</td>
-        </tr>);
+            <td>
+                <Link to="/Single" state={{ item }}>
+                    Show
+                </Link>
+            </td>
+        </tr>
+    );
 };
 
 export default MediaRow;
