@@ -6,6 +6,11 @@ import Upload from './views/Upload';
 import Layout from './components/Layout';
 import Single from './views/Single';
 
+const loggedUser = {
+  name: 'test',
+  bio: 'testing bio',
+};
+
 const App = () => {
   return (
     <>
@@ -13,7 +18,7 @@ const App = () => {
         <Routes>
           <Route element={<Layout />}>
             <Route path="/" element={<Home />}></Route>
-            <Route path="/Profile" element={<Profile />}></Route>
+            <Route path="/Profile" element={<Profile name={loggedUser.name} bio={loggedUser.bio} />}></Route>
             <Route path="/Upload" element={<Upload />}></Route>
             <Route path="/Single" element={<Single />}></Route>
           </Route>

@@ -1,9 +1,27 @@
+import { useState } from 'react';
+
+const uploadFile = async () => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+};
+
 const Upload = () => {
+    const [uploading, setUploading] = useState(false);
+
     return (
-        <div>
-            <h1>Upload</h1>
-            <p>This is the Upload view placeholder.</p>
-        </div>
+        <>
+            <h2>Upload</h2>
+            <input type="file" />
+            <input type="text" placeholder="Title" />
+
+            <button
+                onClick={() => {
+                    setUploading(true);
+                    uploadFile().finally(() => setUploading(false));
+                }}
+            >Upload
+            </button>
+            {uploading && <p>Uploading...</p>}
+        </>
     );
 };
 
