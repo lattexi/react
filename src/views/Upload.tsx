@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 const uploadFile = async () => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 4000));
 };
 
 const Upload = () => {
@@ -21,6 +21,7 @@ const Upload = () => {
             >Upload
             </button>
             {uploading && <p>Uploading...</p>}
+            {uploading && <progress />}
         </>
     );
 };
