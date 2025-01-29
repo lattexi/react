@@ -1,4 +1,4 @@
-import { MediaItem, MediaItemWithOwner } from "hybrid-types/DBTypes";
+import { MediaItemWithOwner } from "hybrid-types/DBTypes";
 import { Link } from "react-router-dom";
 
 type MediaItemProps = {

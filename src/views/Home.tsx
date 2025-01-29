@@ -1,7 +1,6 @@
 import {
   MediaItem,
   MediaItemWithOwner,
-  UserWithLevel,
   UserWithNoPassword,
 } from "hybrid-types/DBTypes";
 import MediaRow from "../components/MediaRow";
