@@ -1,63 +1,37 @@
-import { useState, useEffect } from "react";
-
-type User = {
-    name: string;
-    bio: string;
-};
-
-const profile = {
-    name: "test",
-    bio: "testing bio",
-};
-
-const guest = {
-    name: "Guest",
-    bio: "Welcome to our site!",
-};
+import { useUser } from "../hooks/apihooks";
+import { useEffect, useState } from "react";
+import { UserWithNoPassword } from "hybrid-types/DBTypes";
 
 const Profile = () => {
-    const [user, setUser] = useState<User | undefined>(undefined);
+  const [user, setUser] = useState<UserWithNoPassword | null>(null);
+  const { getUserByToken } = useUser();
 
-    useEffect(() => {
-        const fetchProfile = async () => {
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            setUser(profile);
-            if (!profile) {
-                setUser(guest);
-            }
-        };
+  const getUser = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    const userResponse = await getUserByToken(token);
+    setUser(userResponse.user);
+  };
 
-        fetchProfile();
-    }, []);
+  useEffect(() => {
+    getUser();
+  }, []);
+  console.log(user);
 
-    return (
+  return (
+    <>
+      <h1>Profile</h1>
+
+      {user && (
         <>
-            <h2>Profile</h2>
-            {user ? (
-                user.name === guest.name ? (
-                    <>
-                        <h3>Welcome, {user.name}!</h3>
-                        <p>{user.bio}</p>
-                        <p>Sign up or log in to access personalized features!</p>
-                        <button>Sign Up</button>
-                        <button>Log In</button>
-                    </>
-                ) : (
-                    <>
-                        <h3>{user.name}'s Profile</h3>
-                        <p>{user.bio}</p>
-                        <button>Edit Profile</button>
-                    </>
-                )
-            ) : (
-                <>
-                    <h3>Loading...</h3>
-                    <progress />
-                </>
-            )}
+          <p>{user.username}</p>
+          <p>{user.email}</p>
+          <p>{user.level_name}</p>
+          <p>{new Date(user.created_at).toLocaleString("fi-FI")}</p>
         </>
-    );
+      )}
+    </>
+  );
 };
-
 
 export default Profile;

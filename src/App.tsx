@@ -1,11 +1,11 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import './App.css';
-import Home from './views/Home';
-import Profile from './views/Profile';
-import Upload from './views/Upload';
-import Layout from './components/Layout';
-import Single from './views/Single';
-import Example from './views/Example';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import "./App.css";
+import Home from "./views/Home";
+import Profile from "./views/Profile";
+import Upload from "./views/Upload";
+import Layout from "./components/Layout";
+import Single from "./views/Single";
+import Login from "./views/Login";
 
 const App = () => {
   return (
@@ -17,7 +17,7 @@ const App = () => {
             <Route path="/Profile" element={<Profile />}></Route>
             <Route path="/Upload" element={<Upload />}></Route>
             <Route path="/Single" element={<Single />}></Route>
-            <Route path="/example" element={<Example />}></Route>
+            <Route path="/Login" element={<Login />}></Route>
           </Route>
         </Routes>
       </BrowserRouter>
