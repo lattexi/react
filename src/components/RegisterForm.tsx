@@ -17,6 +17,7 @@ const RegisterForm = () => {
     try {
       const registerResult = await postRegister(inputs as RegisterCredentials);
       console.log(registerResult);
+      navigate("/login");
     } catch (e) {
       console.error((e as Error).message);
     }
