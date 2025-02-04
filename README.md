@@ -1,5 +1,5 @@
 # React + TypeScript + Vite
 
-## Routing
+## Linkki sovellukseen
 
-- [Routing](https://users.metropolia.fi/~lauralek/react/)
+- [users.metropolia](https://users.metropolia.fi/~lauralek/react/)
