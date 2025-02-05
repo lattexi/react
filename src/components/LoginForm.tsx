@@ -1,12 +1,10 @@
 import { useForm } from "../hooks/formHooks";
 import { Credentials } from "../types/LocalTypes";
-import { useAuthentication } from "../hooks/apihooks";
-import { useNavigate } from "react-router-dom";
+import { useUserContext } from "../hooks/ContextHooks";
 
 // LoginForm.tsx
 const LoginForm = () => {
-  const navigate = useNavigate();
-  const { postLogin } = useAuthentication();
+  const { handleLogin } = useUserContext();
   const initValues: Credentials = {
     username: "",
     password: "",
@@ -14,11 +12,7 @@ const LoginForm = () => {
 
   const doLogin = async () => {
     try {
-      const loginResult = await postLogin(inputs as Credentials);
-      if (loginResult) {
-        localStorage.setItem("token", loginResult.token);
-      }
-      navigate("/");
+      handleLogin(inputs as Credentials);
     } catch (e) {
       console.error((e as Error).message);
     }

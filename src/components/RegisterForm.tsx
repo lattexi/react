@@ -1,6 +1,6 @@
 import { useForm } from "../hooks/formHooks";
 import { RegisterCredentials } from "../types/LocalTypes";
-import { useUser } from "../hooks/apihooks";
+import { useUser } from "../hooks/apiHooks";
 import { useNavigate } from "react-router-dom";
 
 // LoginForm.tsx

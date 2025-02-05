@@ -2,7 +2,7 @@ import { MediaItemWithOwner } from "hybrid-types/DBTypes";
 import MediaRow from "../components/MediaRow";
 import { useState } from "react";
 import SingleView from "../components/SingleView";
-import { useMedia } from "../hooks/apihooks";
+import { useMedia } from "../hooks/apiHooks";
 
 const Home = () => {
   const [selectedItem, setSelectedItem] = useState<
