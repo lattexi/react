@@ -4,9 +4,11 @@ import { useUserContext } from "../hooks/ContextHooks";
 
 const Layout = () => {
   const { user, handleAutoLogin } = useUserContext();
+
   useEffect(() => {
     if (!user) handleAutoLogin();
   }, []);
+
   return (
     <>
       <h1>My App</h1>
@@ -32,9 +34,6 @@ const Layout = () => {
               <>
                 <li>
                   <Link to="/Login">Login</Link>
-                </li>
-                <li>
-                  <Link to="/Register">Register</Link>
                 </li>
               </>
             )}

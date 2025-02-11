@@ -3,7 +3,8 @@ import { Credentials } from "../types/LocalTypes";
 import { useUserContext } from "../hooks/ContextHooks";
 
 // LoginForm.tsx
-const LoginForm = () => {
+const LoginForm = (props: { toggleRegister: () => void }) => {
+  const toggleRegister = props.toggleRegister;
   const { handleLogin } = useUserContext();
   const initValues: Credentials = {
     username: "",
@@ -48,6 +49,9 @@ const LoginForm = () => {
           />
         </div>
         <button type="submit">Login</button>
+        <p onClick={toggleRegister} className="toggleRegister">
+          Click here to register
+        </p>
       </form>
     </>
   );

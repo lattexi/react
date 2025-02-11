@@ -133,3 +133,8 @@ button {
   border: none;
   cursor: pointer;
 }
+
+.toggleRegister {
+  cursor: pointer;
+  text-decoration: underline;
+}

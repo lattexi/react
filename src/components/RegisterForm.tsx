@@ -4,7 +4,8 @@ import { useUser } from "../hooks/apiHooks";
 import { useNavigate } from "react-router-dom";
 
 // LoginForm.tsx
-const RegisterForm = () => {
+const RegisterForm = (props: { toggleRegister: () => void }) => {
+  const toggleRegister = props.toggleRegister;
   const navigate = useNavigate();
   const { postRegister } = useUser();
   const initValues: RegisterCredentials = {
@@ -62,7 +63,10 @@ const RegisterForm = () => {
             autoComplete="current-password"
           />
         </div>
-        <button type="submit">Login</button>
+        <button type="submit">Register</button>
+        <p onClick={toggleRegister} className="toggleRegister">
+          Click here to login
+        </p>
       </form>
     </>
   );
