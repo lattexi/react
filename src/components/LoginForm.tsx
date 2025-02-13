@@ -1,14 +1,14 @@
-import { useForm } from "../hooks/formHooks";
-import { Credentials } from "../types/LocalTypes";
-import { useUserContext } from "../hooks/ContextHooks";
+import { useForm } from '../hooks/formHooks';
+import { Credentials } from '../types/LocalTypes';
+import { useUserContext } from '../hooks/ContextHooks';
 
 // LoginForm.tsx
 const LoginForm = (props: { toggleRegister: () => void }) => {
   const toggleRegister = props.toggleRegister;
   const { handleLogin } = useUserContext();
   const initValues: Credentials = {
-    username: "",
-    password: "",
+    username: '',
+    password: '',
   };
 
   const doLogin = async () => {
@@ -19,10 +19,7 @@ const LoginForm = (props: { toggleRegister: () => void }) => {
     }
   };
 
-  const { handleSubmit, handleInputChange, inputs } = useForm(
-    doLogin,
-    initValues,
-  );
+  const { handleSubmit, handleInputChange, inputs } = useForm(doLogin, initValues);
 
   return (
     <>
@@ -31,6 +28,7 @@ const LoginForm = (props: { toggleRegister: () => void }) => {
         <div>
           <label htmlFor="loginusername">Username</label>
           <input
+            className="my-2 rounded-sm border border-stone-500 p-2"
             name="username"
             type="text"
             id="loginusername"
@@ -41,6 +39,7 @@ const LoginForm = (props: { toggleRegister: () => void }) => {
         <div>
           <label htmlFor="loginpassword">Password</label>
           <input
+            className="my-2 rounded-sm border border-stone-500 p-2"
             name="password"
             type="password"
             id="loginpassword"
@@ -48,8 +47,10 @@ const LoginForm = (props: { toggleRegister: () => void }) => {
             autoComplete="current-password"
           />
         </div>
-        <button type="submit">Login</button>
-        <p onClick={toggleRegister} className="toggleRegister">
+        <button type="submit" className="my-2 cursor-pointer rounded-sm bg-stone-500 p-2">
+          Login
+        </button>
+        <p onClick={toggleRegister} className="cursor-pointer">
           Click here to register
         </p>
       </form>

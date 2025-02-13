@@ -2,15 +2,12 @@
 import { ChangeEvent, useRef, useState } from 'react';
 import { useForm } from '../hooks/formHooks';
 import { useFile, useMedia } from '../hooks/apiHooks';
-import { useNavigate } from 'react-router-dom';
 
 const Upload = () => {
   const [uploading, setUploading] = useState<boolean>(false);
   const [file, setFile] = useState<File | null>(null);
   const [uploadResult, setUploadResult] = useState<string>('');
   const fileRef = useRef<HTMLInputElement | null>(null);
-
-  const navigate = useNavigate();
 
   const { postFile } = useFile();
   const { postMedia } = useMedia();
@@ -62,14 +59,14 @@ const Upload = () => {
           <h1>{uploadResult}</h1>
         </>
       ) : (
-        <>
+        <div className="flex flex-col items-center p-4">
           {uploading ? (
             <h1>Uploading...</h1>
           ) : (
             <>
               <h1>Upload</h1>
               <form onSubmit={handleSubmit}>
-                <div>
+                <div className="my-2 flex flex-col">
                   <label htmlFor="title">Title</label>
                   <input
                     name="title"
@@ -77,9 +74,10 @@ const Upload = () => {
                     id="title"
                     onChange={handleInputChange}
                     value={inputs.title}
+                    className="my-2 rounded-sm border-2 border-stone-500"
                   />
                 </div>
-                <div>
+                <div className="my-2 flex flex-col">
                   <label htmlFor="description">Description</label>
                   <textarea
                     name="description"
@@ -87,9 +85,10 @@ const Upload = () => {
                     id="description"
                     onChange={handleInputChange}
                     value={inputs.description}
+                    className="my-2 rounded-sm border-2 border-stone-500"
                   ></textarea>
                 </div>
-                <div>
+                <div className="my-2">
                   <label htmlFor="file">File</label>
                   <input
                     name="file"
@@ -97,6 +96,7 @@ const Upload = () => {
                     id="file"
                     accept="image/*, video/*"
                     onChange={handleFileChange}
+                    className="mx-2"
                   />
                 </div>
                 <img
@@ -105,6 +105,7 @@ const Upload = () => {
                   }
                   alt="preview"
                   width="200"
+                  className="my-2"
                 />
                 <button type="submit" disabled={file && inputs.title.length > 3 ? false : true}>
                   Upload
@@ -115,7 +116,7 @@ const Upload = () => {
               </form>
             </>
           )}
-        </>
+        </div>
       )}
     </>
   );
