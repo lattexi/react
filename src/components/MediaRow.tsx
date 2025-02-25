@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import { MediaItemProps } from '../types/LocalTypes';
 
 const MediaRow = (props: MediaItemProps) => {
@@ -28,15 +27,7 @@ const MediaRow = (props: MediaItemProps) => {
       <td className="overflow-hidden p-2 overflow-ellipsis whitespace-nowrap">{item.filesize}</td>
       <td className="overflow-hidden p-2 overflow-ellipsis whitespace-nowrap">{item.media_type}</td>
       <td className="overflow-hidden p-2 overflow-ellipsis whitespace-nowrap">{item.username}</td>
-      <td className="p-2">
-        <>
-          <p className="w-fit cursor-pointer rounded-sm bg-stone-900 p-4">
-            <Link to="/Single" state={{ item }}>
-              Show
-            </Link>
-          </p>
-        </>
-      </td>
+      <td className="p-2"></td>
     </tr>
   );
 };

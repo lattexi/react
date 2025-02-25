@@ -60,17 +60,19 @@ const SingleView = (props: MediaItemProps) => {
                 <Likes item={item} />
               </div>
             </div>
-            <button
-              className="mr-2 cursor-pointer rounded-sm bg-stone-800 p-4"
-              onClick={() => setSelectedItem(undefined)}
-            >
-              Close
-            </button>
-            <p className="w-fit cursor-pointer rounded-sm bg-stone-800 p-4">
-              <Link to="/Single" state={{ item }}>
-                Show
-              </Link>
-            </p>
+            <div className="flex gap-2">
+              <button
+                className="cursor-pointer rounded-sm bg-stone-800 p-4"
+                onClick={() => setSelectedItem(undefined)}
+              >
+                Close
+              </button>
+              <button className="cursor-pointer rounded-sm bg-stone-800 p-4">
+                <Link to="/Single" state={{ item }}>
+                  Show
+                </Link>
+              </button>
+            </div>
             {user && user.username === item.username && (
               <>
                 <button className="mr-2 cursor-pointer rounded-sm bg-stone-800 p-4">Modify</button>
