@@ -1,4 +1,10 @@
-import { Like, MediaItem, MediaItemWithOwner, UserWithNoPassword } from 'hybrid-types/DBTypes';
+import {
+  Like,
+  MediaItem,
+  MediaItemWithOwner,
+  UserWithNoPassword,
+  Comment,
+} from 'hybrid-types/DBTypes';
 import { useEffect, useState } from 'react';
 import { fetchData } from '../lib/functions';
 import { Credentials, RegisterCredentials } from '../types/LocalTypes';
@@ -11,14 +17,17 @@ import {
 } from 'hybrid-types/MessageTypes';
 
 const useMedia = () => {
+  console.log('useMedia hook');
   const [mediaArray, setMediaArray] = useState<MediaItemWithOwner[]>([]);
 
   useEffect(() => {
     const getMedia = async () => {
       try {
+        console.log('fetching media');
         const media = await fetchData<MediaItem[]>(import.meta.env.VITE_MEDIA_API + '/media');
         const mediaWithOwner: MediaItemWithOwner[] = await Promise.all(
           media.map(async (item) => {
+            console.log('fetching owner');
             const owner = await fetchData<UserWithNoPassword>(
               import.meta.env.VITE_AUTH_API + '/users/' + item.user_id
             );
@@ -74,7 +83,24 @@ const useMedia = () => {
     }
   };
 
-  return { mediaArray, postMedia };
+  const deleteMedia = async (media_id: number, token: string) => {
+    const options = {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      return await fetchData<MessageResponse>(
+        import.meta.env.VITE_MEDIA_API + '/media/' + media_id,
+        options
+      );
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  };
+
+  return { mediaArray, postMedia, deleteMedia };
 };
 
 const useFile = () => {
@@ -131,6 +157,17 @@ const useUser = () => {
     }
   };
 
+  const getUserById = async (user_id: number) => {
+    try {
+      console.log('user_id', user_id);
+      return await fetchData<UserWithNoPassword>(
+        import.meta.env.VITE_AUTH_API + '/users/' + user_id
+      );
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  };
+
   const postRegister = async (credentials: RegisterCredentials) => {
     const options = {
       method: 'POST',
@@ -168,7 +205,7 @@ const useUser = () => {
     }
   };
 
-  return { getUserByToken, postRegister, getUsernameAvailable, getEmailAvailable };
+  return { getUserByToken, postRegister, getUsernameAvailable, getEmailAvailable, getUserById };
 };
 
 const useLike = () => {
@@ -224,6 +261,34 @@ const useLike = () => {
   return { postLike, deleteLike, getCountByMediaId, getUserLike };
 };
 
-const useComments = () => {};
+const useComment = () => {
+  const { getUserById } = useUser();
+  const postComment = async (comment_text: string, media_id: number, token: string) => {
+    const options = {
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer ' + token,
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({ comment_text, media_id }),
+    };
+    return await fetchData<MessageResponse>(import.meta.env.VITE_MEDIA_API + '/comments', options);
+  };
 
-export { useMedia, useUser, useComments, useFile, useAuthentication, useLike };
+  const getCommentsByMediaId = async (media_id: number) => {
+    const comments = await fetchData<Comment[]>(
+      import.meta.env.VITE_MEDIA_API + '/comments/bymedia/' + media_id
+    );
+    const commentsWithUsername = await Promise.all<Comment & { username: string }>(
+      comments.map(async (comment) => {
+        const user = await getUserById(comment.user_id);
+        return { ...comment, username: user.username };
+      })
+    );
+    return commentsWithUsername;
+  };
+
+  return { postComment, getCommentsByMediaId };
+};
+
+export { useMedia, useUser, useComment, useFile, useAuthentication, useLike };

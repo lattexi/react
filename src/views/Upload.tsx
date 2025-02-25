@@ -89,14 +89,14 @@ const Upload = () => {
                   ></textarea>
                 </div>
                 <div className="my-2">
-                  <label htmlFor="file">File</label>
+                  <label htmlFor="file"></label>
                   <input
                     name="file"
                     type="file"
                     id="file"
                     accept="image/*, video/*"
                     onChange={handleFileChange}
-                    className="mx-2"
+                    className="border-2 border-stone-500"
                   />
                 </div>
                 <img
@@ -107,7 +107,11 @@ const Upload = () => {
                   width="200"
                   className="my-2"
                 />
-                <button type="submit" disabled={file && inputs.title.length > 3 ? false : true}>
+                <button
+                  className="cursor-pointer rounded-sm bg-stone-500 p-2 text-2xl"
+                  type="submit"
+                  onClick={doUpload}
+                >
                   Upload
                 </button>
                 <button type="button" onClick={resetForm}>

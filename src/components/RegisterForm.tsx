@@ -51,7 +51,7 @@ const RegisterForm = (props: { toggleRegister: () => void }) => {
 
   return (
     <>
-      <h1>Register</h1>
+      <h2>Register</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="registerusername">Username</label>

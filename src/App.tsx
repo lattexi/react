@@ -1,14 +1,15 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import "./App.css";
-import Home from "./views/Home";
-import Profile from "./views/Profile";
-import Upload from "./views/Upload";
-import Layout from "./components/Layout";
-import Single from "./views/Single";
-import Login from "./views/Login";
-import Logout from "./views/Logout";
-import { UserProvider } from "./contexts/UserContext";
-import ProtectedRoute from "./components/ProtectedRoute";
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import './App.css';
+import Home from './views/Home';
+import Profile from './views/Profile';
+import Upload from './views/Upload';
+import Layout from './components/Layout';
+import Single from './views/Single';
+import Login from './views/Login';
+import Logout from './views/Logout';
+import { UserProvider } from './contexts/UserContext';
+import ProtectedRoute from './components/ProtectedRoute';
+import Posts from './views/Posts';
 
 const App = () => {
   return (
@@ -31,6 +32,14 @@ const App = () => {
                 element={
                   <ProtectedRoute>
                     <Upload />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
+                path="/Posts"
+                element={
+                  <ProtectedRoute>
+                    <Posts />
                   </ProtectedRoute>
                 }
               ></Route>

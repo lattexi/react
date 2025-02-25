@@ -23,7 +23,7 @@ const LoginForm = (props: { toggleRegister: () => void }) => {
 
   return (
     <>
-      <h1>Login</h1>
+      <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="loginusername">Username</label>

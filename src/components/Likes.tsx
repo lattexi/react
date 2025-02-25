@@ -1,6 +1,7 @@
 import { Like, MediaItemWithOwner } from 'hybrid-types/DBTypes';
 import { useEffect, useReducer } from 'react';
 import { useLike } from '../hooks/apiHooks';
+import { useUserContext } from '../hooks/ContextHooks';
 
 type LikeState = {
   count: number;
@@ -32,6 +33,7 @@ const likeReducer = (state: LikeState, action: LikeAction): LikeState => {
 const Likes = ({ item }: { item: MediaItemWithOwner }) => {
   const [likeState, likeDispatch] = useReducer(likeReducer, likeInitialState);
   const { postLike, deleteLike, getCountByMediaId, getUserLike } = useLike();
+  const { user } = useUserContext();
 
   const getLikes = async () => {
     const token = localStorage.getItem('token');
@@ -63,42 +65,69 @@ const Likes = ({ item }: { item: MediaItemWithOwner }) => {
   }, [item]);
 
   const handleLike = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!item || !token) {
-        return;
-      }
-      // If user has liked the media, delete the like. Otherwise, post the like.
-      if (likeState.userLike) {
-        // delete the like and dispatch the new like count to the state. Dispatching is already done in the getLikes and getLikeCount functions.
+    const token = localStorage.getItem('token');
+    if (!item || !token) {
+      return;
+    }
+
+    if (likeState.userLike) {
+      likeDispatch({ type: 'like', like: null });
+      likeDispatch({ type: 'set_like_count', count: likeState.count - 1 });
+
+      try {
         await deleteLike(likeState.userLike.like_id, token);
-        // optionally use getLikes() & getLikeCount() here to update all likes from db
-        likeDispatch({ type: 'like', like: null });
-        likeDispatch({ type: 'set_like_count', count: likeState.count - 1 });
-      } else {
-        // post the like and dispatch the new like count to the state. Dispatching is already done in the getLikes and getLikeCount functions.
-        await postLike(item.media_id, token);
+        getLikes();
+      } catch (error) {
         getLikes();
         getLikeCount();
       }
-    } catch (e) {
-      console.log('like error', (e as Error).message);
+    } else {
+      likeDispatch({ type: 'like', like: { like_id: -1 } as Like });
+      likeDispatch({ type: 'set_like_count', count: likeState.count + 1 });
+
+      try {
+        await postLike(item.media_id, token);
+        getLikes();
+      } catch (error) {
+        getLikes();
+        getLikeCount();
+      }
     }
   };
 
+  const HeartIcon = ({ className = '' }) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className={`h-10 w-10 ${className}`}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+    >
+      <path
+        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 
+               2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 
+               14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 
+               6.86-8.55 11.54L12 21.35z"
+      />
+    </svg>
+  );
+
   return (
-    <>
-      <p>Likes: {likeState.count}</p>
-      <button
-        className="cursor-pointer rounded-sm bg-blue-600 p-2"
-        onClick={() => {
-          handleLike();
-          console.log('likeState', likeState);
-        }}
-      >
-        {likeState.userLike ? 'Unlike' : 'Like'}
-      </button>
-    </>
+    <div className="flex items-center">
+      {user ? (
+        <button
+          className="cursor-pointer rounded-sm"
+          onClick={() => {
+            handleLike();
+            console.log('likeState', likeState);
+          }}
+        >
+          <HeartIcon className={likeState.userLike ? 'text-red-500' : 'text-white'} />
+        </button>
+      ) : (
+        <HeartIcon className="text-white" />
+      )}
+      <p className="p-2 text-2xl">{likeState.count}</p>
+    </div>
   );
 };
 

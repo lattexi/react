@@ -11,13 +11,13 @@ const Layout = () => {
 
   return (
     <>
-      <h1>My App</h1>
+      <h1>Winstagram</h1>
       <div>
         <nav>
           <ul className="m-0 flex list-none justify-end bg-stone-600 p-0">
             <li>
               <Link
-                className="block p-4 text-center text-xl transition-all duration-500 hover:cursor-pointer hover:bg-stone-700"
+                className="block p-4 text-center text-xl transition-all duration-200 hover:cursor-pointer hover:bg-stone-700"
                 to="/"
               >
                 Home
@@ -27,7 +27,7 @@ const Layout = () => {
               <>
                 <li>
                   <Link
-                    className="block p-4 text-center text-xl transition-all duration-500 hover:cursor-pointer hover:bg-stone-700"
+                    className="block p-4 text-center text-xl transition-all duration-200 hover:cursor-pointer hover:bg-stone-700"
                     to="/Profile"
                   >
                     Profile
@@ -35,7 +35,15 @@ const Layout = () => {
                 </li>
                 <li>
                   <Link
-                    className="block p-4 text-center text-xl transition-all duration-500 hover:cursor-pointer hover:bg-stone-700"
+                    className="block p-4 text-center text-xl transition-all duration-200 hover:cursor-pointer hover:bg-stone-700"
+                    to="/Posts"
+                  >
+                    Posts
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    className="block p-4 text-center text-xl transition-all duration-200 hover:cursor-pointer hover:bg-stone-700"
                     to="/Upload"
                   >
                     Upload
@@ -43,7 +51,7 @@ const Layout = () => {
                 </li>
                 <li>
                   <Link
-                    className="block p-4 text-center text-xl transition-all duration-500 hover:cursor-pointer hover:bg-stone-700"
+                    className="block p-4 text-center text-xl transition-all duration-200 hover:cursor-pointer hover:bg-stone-700"
                     to="/Logout"
                   >
                     Logout
@@ -54,7 +62,7 @@ const Layout = () => {
               <>
                 <li>
                   <Link
-                    className="block p-4 text-center text-xl transition-all duration-500 hover:cursor-pointer hover:bg-stone-700"
+                    className="block p-4 text-center text-xl transition-all duration-200 hover:cursor-pointer hover:bg-stone-700"
                     to="/Login"
                   >
                     Login

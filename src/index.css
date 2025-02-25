@@ -24,4 +24,20 @@
   h3 {
     @apply text-xl font-semibold;
   }
+
+  .no-scrollbar {
+    /* Firefox */
+    scrollbar-width: none;
+    /* IE 10+ */
+    -ms-overflow-style: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+
+  @theme {
+    --breakpoint-sm: 550px;
+    --breakpoint-md: 770px;
+  }
 }

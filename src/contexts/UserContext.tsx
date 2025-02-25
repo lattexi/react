@@ -1,9 +1,9 @@
 // UserContext.tsx
-import { createContext, useState } from "react";
-import { UserWithNoPassword } from "hybrid-types/DBTypes";
-import { useAuthentication, useUser } from "../hooks/apiHooks";
-import { useLocation, useNavigate } from "react-router-dom";
-import { AuthContextType, Credentials } from "../types/LocalTypes";
+import { createContext, useState } from 'react';
+import { UserWithNoPassword } from 'hybrid-types/DBTypes';
+import { useAuthentication, useUser } from '../hooks/apiHooks';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { AuthContextType, Credentials } from '../types/LocalTypes';
 
 const UserContext = createContext<AuthContextType | null>(null);
 
@@ -19,10 +19,10 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       const loginResult = await postLogin(credentials as Credentials);
       if (loginResult) {
-        localStorage.setItem("token", loginResult.token);
+        localStorage.setItem('token', loginResult.token);
         setUser(loginResult.user);
       }
-      navigate("/");
+      navigate('/');
     } catch (e) {
       console.error((e as Error).message);
     }
@@ -30,9 +30,9 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
   const handleLogout = () => {
     try {
-      localStorage.removeItem("token");
+      localStorage.removeItem('token');
       setUser(null);
-      navigate("/");
+      navigate('/');
     } catch (e) {
       console.log((e as Error).message);
     }
@@ -41,7 +41,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
   // handleAutoLogin is used when the app is loaded to check if there is a valid token in local storage
   const handleAutoLogin = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem('token');
       if (!token) {
         return;
       }
@@ -50,7 +50,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
         throw new Error(`User not found: ${response}`);
       }
       setUser(response.user);
-      const origin = location.state.from.pathname || "/";
+      const origin = location.state.from.pathname || '/';
       navigate(origin);
     } catch (e) {
       console.log((e as Error).message);
@@ -58,9 +58,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <UserContext.Provider
-      value={{ user, handleLogin, handleLogout, handleAutoLogin }}
-    >
+    <UserContext.Provider value={{ user, handleLogin, handleLogout, handleAutoLogin }}>
       {children}
     </UserContext.Provider>
   );

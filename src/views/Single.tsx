@@ -2,6 +2,7 @@ import { MediaItemWithOwner } from 'hybrid-types/DBTypes';
 import { useLocation } from 'react-router-dom';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import Likes from '../components/Likes';
+import Comments from '../components/Comments';
 
 const Single = () => {
   const { state } = useLocation();
@@ -19,7 +20,7 @@ const Single = () => {
         ) : (
           <img src={item.filename} alt={item.title} className="h-screen" />
         )}
-        <div className="flex flex-row justify-between py-4">
+        <div className="flex flex-col justify-between py-4">
           <div>
             <p>Uploaded by: {item.username}</p>
             <p>Media type: {item.media_type}</p>
@@ -32,6 +33,7 @@ const Single = () => {
             Go back
           </button>
           <Likes item={item} />
+          <Comments item={item} />
         </div>
       </div>
     </div>

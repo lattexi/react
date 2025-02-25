@@ -1,55 +1,42 @@
-import { MediaItemWithOwner } from 'hybrid-types/DBTypes';
 import { Link } from 'react-router-dom';
-import { useUserContext } from '../hooks/ContextHooks';
-import Likes from './Likes';
-
-type MediaItemProps = {
-  item: MediaItemWithOwner;
-  setSelectedItem: (item: MediaItemWithOwner | undefined) => void;
-};
+import { MediaItemProps } from '../types/LocalTypes';
 
 const MediaRow = (props: MediaItemProps) => {
-  const { user } = useUserContext();
-  const { item } = props;
+  const { item, setSelectedItem } = props;
+
   return (
-    <tr className="flex w-64 flex-col">
+    <tr
+      className="m-auto flex w-full flex-col overflow-hidden transition-all duration-200 hover:cursor-pointer hover:bg-stone-700 sm:w-60"
+      onClick={() => {
+        setSelectedItem(item);
+      }}
+    >
       <td className="p-2">
         <img
-          className="rounded-sm object-cover"
+          className="h-96 w-full rounded-sm object-cover sm:h-60 sm:w-60"
           src={item.thumbnail || (item.screenshots && item.screenshots[0]) || undefined}
           alt={item.title}
         />
       </td>
-      <td className="p-2">{item.title}</td>
-      <td className="p-2">{item.description}</td>
-      <td className="p-2">{new Date(item.created_at).toLocaleString('fi-FI')}</td>
-      <td className="p-2">{item.filesize}</td>
-      <td className="p-2">{item.media_type}</td>
-      <td className="p-2">{item.username}</td>
-      <td>
-        <p className="p-2">
-          <Link
-            className="w-full cursor-pointer rounded-sm bg-stone-900 p-4"
-            to="/Single"
-            state={{ item }}
-          >
-            Show
-          </Link>
-        </p>
+      <td className="overflow-hidden p-2 overflow-ellipsis whitespace-nowrap">{item.title}</td>
+      <td className="overflow-hidden p-2 overflow-ellipsis whitespace-nowrap">
+        {item.description}
       </td>
-      {user && user.username === item.username && (
+      <td className="overflow-hidden p-2 overflow-ellipsis whitespace-nowrap">
+        {new Date(item.created_at).toLocaleString('fi-FI')}
+      </td>
+      <td className="overflow-hidden p-2 overflow-ellipsis whitespace-nowrap">{item.filesize}</td>
+      <td className="overflow-hidden p-2 overflow-ellipsis whitespace-nowrap">{item.media_type}</td>
+      <td className="overflow-hidden p-2 overflow-ellipsis whitespace-nowrap">{item.username}</td>
+      <td className="p-2">
         <>
-          <button
-            onClick={() => {
-              props.setSelectedItem(item);
-            }}
-            className="w-full cursor-pointer rounded-sm bg-stone-900 p-4"
-          >
-            Modify
-          </button>
-          <button className="w-full cursor-pointer rounded-sm bg-stone-900 p-4">Delete</button>
+          <p className="w-fit cursor-pointer rounded-sm bg-stone-900 p-4">
+            <Link to="/Single" state={{ item }}>
+              Show
+            </Link>
+          </p>
         </>
-      )}
+      </td>
     </tr>
   );
 };
