@@ -4,6 +4,8 @@ import {
   MediaItemWithOwner,
   UserWithNoPassword,
   Comment,
+  TagResult,
+  Tag,
 } from 'hybrid-types/DBTypes';
 import { useEffect, useState } from 'react';
 import { fetchData } from '../lib/functions';
@@ -16,44 +18,71 @@ import {
   UserResponse,
 } from 'hybrid-types/MessageTypes';
 
-const useMedia = () => {
+const useMedia = (user_id?: number) => {
   console.log('useMedia hook');
   const [mediaArray, setMediaArray] = useState<MediaItemWithOwner[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [hasNext, setHasNext] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
+
+  const getMedia = async (pageNumber: number) => {
+    setLoading(true);
+    const url = user_id
+      ? import.meta.env.VITE_MEDIA_API + `/media/byuser/${user_id}`
+      : import.meta.env.VITE_MEDIA_API + `/media?page=${pageNumber}&limit=${16}`;
+    if (user_id) {
+      console.log('user_id', user_id);
+    }
+    try {
+      console.log('fetching media');
+      const media = await fetchData<MediaItem[]>(url);
+      const mediaWithOwner: MediaItemWithOwner[] = await Promise.all(
+        media.map(async (item) => {
+          console.log('fetching owner');
+          const owner = await fetchData<UserWithNoPassword>(
+            import.meta.env.VITE_AUTH_API + '/users/' + item.user_id
+          );
+
+          const mediaItem: MediaItemWithOwner = {
+            ...item,
+            username: owner.username,
+          };
+
+          if (mediaItem.screenshots && typeof mediaItem.screenshots === 'string') {
+            mediaItem.screenshots = JSON.parse(mediaItem.screenshots).map((screenshot: string) => {
+              return import.meta.env.VITE_FILE_URL + screenshot;
+            });
+          }
+          return mediaItem;
+        })
+      );
+      setMediaArray(mediaWithOwner);
+
+      if (mediaWithOwner.length < 16) {
+        setHasNext(false);
+      } else {
+        setHasNext(true);
+      }
+    } catch (e) {
+      console.error((e as Error).message);
+    }
+    setLoading(false);
+  };
+
+  const refreshMedia = () => {
+    setRefreshTrigger((prev) => prev + 1);
+  };
 
   useEffect(() => {
-    const getMedia = async () => {
-      try {
-        console.log('fetching media');
-        const media = await fetchData<MediaItem[]>(import.meta.env.VITE_MEDIA_API + '/media');
-        const mediaWithOwner: MediaItemWithOwner[] = await Promise.all(
-          media.map(async (item) => {
-            console.log('fetching owner');
-            const owner = await fetchData<UserWithNoPassword>(
-              import.meta.env.VITE_AUTH_API + '/users/' + item.user_id
-            );
+    getMedia(currentPage);
+  }, [currentPage, user_id, refreshTrigger]);
 
-            const mediaItem: MediaItemWithOwner = {
-              ...item,
-              username: owner.username,
-            };
-
-            if (mediaItem.screenshots && typeof mediaItem.screenshots === 'string') {
-              mediaItem.screenshots = JSON.parse(mediaItem.screenshots).map(
-                (screenshot: string) => {
-                  return import.meta.env.VITE_FILE_URL + screenshot;
-                }
-              );
-            }
-            return mediaItem;
-          })
-        );
-        setMediaArray(mediaWithOwner);
-      } catch (e) {
-        console.error((e as Error).message);
-      }
-    };
-    getMedia();
-  }, []);
+  const changePage = async (newPage: number) => {
+    if (newPage < 1) return;
+    if (newPage > currentPage && !hasNext) return;
+    setCurrentPage(newPage);
+  };
 
   const postMedia = async (file: UploadResponse, inputs: Record<string, string>, token: string) => {
     const media: Omit<
@@ -77,7 +106,10 @@ const useMedia = () => {
     };
 
     try {
-      return await fetchData<MediaItem>(import.meta.env.VITE_MEDIA_API + '/media', options);
+      return await fetchData<{ media: MediaItem }>(
+        import.meta.env.VITE_MEDIA_API + '/media',
+        options
+      );
     } catch (error) {
       throw new Error((error as Error).message);
     }
@@ -100,7 +132,107 @@ const useMedia = () => {
     }
   };
 
-  return { mediaArray, postMedia, deleteMedia };
+  const modifyMedia = async (media_id: number, inputs: Record<string, string>, token: string) => {
+    const media: Pick<MediaItem, 'title' | 'description'> = {
+      title: inputs.title,
+      description: inputs.description,
+    };
+
+    const options = {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(media),
+    };
+
+    try {
+      return await fetchData<MessageResponse>(
+        import.meta.env.VITE_MEDIA_API + '/media/' + media_id,
+        options
+      );
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  };
+
+  return {
+    mediaArray,
+    postMedia,
+    deleteMedia,
+    modifyMedia,
+    currentPage,
+    changePage,
+    hasNext,
+    loading,
+    refreshMedia,
+  };
+};
+
+const useTags = () => {
+  const postTag = async (media_id: number, tag: string, token: string) => {
+    const options = {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ media_id, tag_name: tag }),
+    };
+    try {
+      return await fetchData<MessageResponse>(import.meta.env.VITE_MEDIA_API + '/tags', options);
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  };
+
+  const deleteTag = async (tag_id: number, token: string) => {
+    const options = {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      return await fetchData<MessageResponse>(
+        import.meta.env.VITE_MEDIA_API + '/tags/' + tag_id,
+        options
+      );
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  };
+
+  const getTagsByMediaId = async (media_id: number) => {
+    try {
+      return await fetchData<TagResult[]>(
+        import.meta.env.VITE_MEDIA_API + '/tags/bymedia/' + media_id
+      );
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  };
+
+  const getMediaByTag = async (tag_id: number) => {
+    try {
+      return await fetchData<MediaItemWithOwner[]>(
+        import.meta.env.VITE_MEDIA_API + '/tags/bytag/' + tag_id
+      );
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  };
+
+  const getAllTags = async () => {
+    try {
+      return await fetchData<Tag[]>(import.meta.env.VITE_MEDIA_API + '/tags');
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  };
+
+  return { postTag, deleteTag, getTagsByMediaId, getAllTags, getMediaByTag };
 };
 
 const useFile = () => {
@@ -291,4 +423,4 @@ const useComment = () => {
   return { postComment, getCommentsByMediaId };
 };
 
-export { useMedia, useUser, useComment, useFile, useAuthentication, useLike };
+export { useMedia, useUser, useComment, useFile, useAuthentication, useLike, useTags };

@@ -12,6 +12,11 @@ export type AuthContextType = {
 
 export type MediaItemProps = {
   item: MediaItemWithOwner;
-  onDelete?: (media_id: number) => void;
+  setSelectedItem: (item: MediaItemWithOwner | undefined) => void;
+};
+
+export type SingleViewProps = {
+  item: MediaItemWithOwner;
+  onDelete: () => void;
   setSelectedItem: (item: MediaItemWithOwner | undefined) => void;
 };

@@ -6,7 +6,8 @@ import Comments from '../components/Comments';
 
 const Single = () => {
   const { state } = useLocation();
-  const item: MediaItemWithOwner = state.item;
+  const item: MediaItemWithOwner = state.currentItem;
+  console.log(item);
   const navigate: NavigateFunction = useNavigate();
   return (
     <div className="flex flex-col items-center">

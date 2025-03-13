@@ -50,8 +50,8 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
         throw new Error(`User not found: ${response}`);
       }
       setUser(response.user);
-      const origin = location.state.from.pathname || '/';
-      navigate(origin);
+      const path = location.pathname || '/';
+      navigate(path);
     } catch (e) {
       console.log((e as Error).message);
     }

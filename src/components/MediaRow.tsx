@@ -5,7 +5,7 @@ const MediaRow = (props: MediaItemProps) => {
 
   return (
     <tr
-      className="m-auto flex w-full flex-col overflow-hidden transition-all duration-200 hover:cursor-pointer hover:bg-stone-700 sm:w-60"
+      className="mx-auto my-2 flex w-full flex-col overflow-hidden rounded-lg transition-all duration-200 hover:cursor-pointer hover:bg-stone-700 sm:w-60"
       onClick={() => {
         setSelectedItem(item);
       }}

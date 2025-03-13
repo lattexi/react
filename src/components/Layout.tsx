@@ -33,14 +33,7 @@ const Layout = () => {
                     Profile
                   </Link>
                 </li>
-                <li>
-                  <Link
-                    className="block p-4 text-center text-xl transition-all duration-200 hover:cursor-pointer hover:bg-stone-700"
-                    to="/Posts"
-                  >
-                    Posts
-                  </Link>
-                </li>
+
                 <li>
                   <Link
                     className="block p-4 text-center text-xl transition-all duration-200 hover:cursor-pointer hover:bg-stone-700"
