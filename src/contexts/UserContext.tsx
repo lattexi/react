@@ -9,7 +9,7 @@ const UserContext = createContext<AuthContextType | null>(null);
 
 const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<UserWithNoPassword | null>(null);
-  const { postLogin } = useAuthentication();
+  const { postLogin, postGoogleLogin } = useAuthentication();
   const { getUserByToken } = useUser();
   const navigate = useNavigate();
   const location = useLocation();
@@ -57,8 +57,19 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const handleGoogleLoginSuccess = async (credentialResponse: any) => {
+    console.log('Google login success:', credentialResponse);
+    const idToken = credentialResponse.credential;
+    const result = await postGoogleLogin(idToken);
+    localStorage.setItem('token', result.token);
+    setUser(result.user);
+    navigate('/');
+  };
+
   return (
-    <UserContext.Provider value={{ user, handleLogin, handleLogout, handleAutoLogin }}>
+    <UserContext.Provider
+      value={{ user, handleLogin, handleLogout, handleAutoLogin, handleGoogleLoginSuccess }}
+    >
       {children}
     </UserContext.Provider>
   );

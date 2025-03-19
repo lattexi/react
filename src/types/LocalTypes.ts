@@ -8,6 +8,7 @@ export type AuthContextType = {
   handleLogin: (credentials: Credentials) => void;
   handleLogout: () => void;
   handleAutoLogin: () => void;
+  handleGoogleLoginSuccess: (credentialResponse: any) => void;
 };
 
 export type MediaItemProps = {
@@ -19,4 +20,9 @@ export type SingleViewProps = {
   item: MediaItemWithOwner;
   onDelete: () => void;
   setSelectedItem: (item: MediaItemWithOwner | undefined) => void;
+};
+
+export type GoogleLoginResponse = {
+  token: string;
+  user: UserWithNoPassword;
 };

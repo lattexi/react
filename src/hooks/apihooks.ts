@@ -9,7 +9,7 @@ import {
 } from 'hybrid-types/DBTypes';
 import { useEffect, useState } from 'react';
 import { fetchData } from '../lib/functions';
-import { Credentials, RegisterCredentials } from '../types/LocalTypes';
+import { Credentials, GoogleLoginResponse, RegisterCredentials } from '../types/LocalTypes';
 import {
   AvailableResponse,
   LoginResponse,
@@ -235,6 +235,53 @@ const useTags = () => {
   return { postTag, deleteTag, getTagsByMediaId, getAllTags, getMediaByTag };
 };
 
+const useRatings = () => {
+  const postRating = async (media_id: number, rating: number, token: string) => {
+    const options = {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ media_id, rating }),
+    };
+    try {
+      return await fetchData<MessageResponse>(import.meta.env.VITE_MEDIA_API + '/rating', options);
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  };
+
+  const deleteRating = async (rating_id: number, token: string) => {
+    const options = {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      return await fetchData<MessageResponse>(
+        import.meta.env.VITE_MEDIA_API + '/rating/' + rating_id,
+        options
+      );
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  };
+
+  const getRatingByMediaId = async (media_id: number) => {
+    try {
+      return await fetchData<{ rating: number }>(
+        import.meta.env.VITE_MEDIA_API + '/rating/average/' + media_id
+      );
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  };
+
+  return { postRating, deleteRating, getRatingByMediaId };
+};
+
 const useFile = () => {
   const postFile = async (file: File, token: string) => {
     const formData = new FormData();
@@ -272,7 +319,25 @@ const useAuthentication = () => {
     }
   };
 
-  return { postLogin };
+  const postGoogleLogin = async (idToken: string) => {
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ idToken }),
+    };
+    try {
+      return await fetchData<GoogleLoginResponse>(
+        import.meta.env.VITE_AUTH_API + '/auth/google',
+        options
+      );
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  };
+
+  return { postLogin, postGoogleLogin };
 };
 
 const useUser = () => {
@@ -423,4 +488,4 @@ const useComment = () => {
   return { postComment, getCommentsByMediaId };
 };
 
-export { useMedia, useUser, useComment, useFile, useAuthentication, useLike, useTags };
+export { useMedia, useUser, useComment, useFile, useAuthentication, useLike, useTags, useRatings };

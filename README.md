@@ -15,3 +15,8 @@
 - Home sivun alareunassa on seuraava sivu nappi, joka lataa seuraavat 16 itemiä uudelle sivulle. Nappi on piilotettu jos itemejä ei ole enempää.
 - Backendistä on poistettu admin vaatimus tagin poistamisesta, jotta käyttäjä voi poistaa omat taginsa ja vaihtaa profiilikuvan.
 - Backend on muutettu palauttamaan itemit aikajärjestyksessä, jotta uusimmat itemit ovat ensimmäisenä listassa.
+
+### Lisätty ominaisuuksia projektin esittelyn jälkeen:
+
+- Backendiin lisätty Google tuki Google kirjautumiseen. Kun käyttäjä kirjautuu ensimmäistä kertaa Googlella, luodaan käyttäjänimi sähköpostiosoitteesta tarkistaen, että käyttäjänimi ei ole varattu. Jos on, lisätään perään numeroita kunnes käyttäjänimi on uniikki.
+- Frontendiin lisätty Google kirjautumisnappi, joka kirjaa käyttäjän sisään ja tallentaa tokenin.

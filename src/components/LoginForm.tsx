@@ -1,11 +1,12 @@
 import { useForm } from '../hooks/formHooks';
 import { Credentials } from '../types/LocalTypes';
 import { useUserContext } from '../hooks/ContextHooks';
+import { GoogleLogin } from '@react-oauth/google';
 
 // LoginForm.tsx
 const LoginForm = (props: { toggleRegister: () => void }) => {
   const toggleRegister = props.toggleRegister;
-  const { handleLogin } = useUserContext();
+  const { handleLogin, handleGoogleLoginSuccess } = useUserContext();
   const initValues: Credentials = {
     username: '',
     password: '',
@@ -20,6 +21,10 @@ const LoginForm = (props: { toggleRegister: () => void }) => {
   };
 
   const { handleSubmit, handleInputChange, inputs } = useForm(doLogin, initValues);
+
+  const handleGoogleLoginError = () => {
+    console.error('Google login failed');
+  };
 
   return (
     <>
@@ -54,6 +59,9 @@ const LoginForm = (props: { toggleRegister: () => void }) => {
           Click here to register
         </p>
       </form>
+      <div>
+        <GoogleLogin onSuccess={handleGoogleLoginSuccess} onError={handleGoogleLoginError} />
+      </div>
     </>
   );
 };
